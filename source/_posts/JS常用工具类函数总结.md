@@ -4,7 +4,7 @@ date: 2019-07-08
 categories:
 - [JS]
 tags:
-- [tools]
+- [工具函数]
 ---
 
 # JS常用工具类函数总结

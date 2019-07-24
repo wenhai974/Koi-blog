@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 一尾小锦鲤呀
+title: A little koi
 subtitle: 嘿！是充满激情的你啊
 description: 嘿！是充满激情的你啊
 keywords: 前端 技术
 author: Koi
-language: zh-cn
+language: zh-CN
 timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://wenhai974.github.io/
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -41,7 +41,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace:
   
 # Home page setting
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: hexo-theme-next
+theme: pacman
 
 ymbols_count_time:
     symbols: true
@@ -86,4 +86,4 @@ ymbols_count_time:
 deploy:
   type: git
   repository: https://github.com/wenhai974/wenhai974.github.io
-  branch: publish
+  branch: master

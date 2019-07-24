@@ -1,0 +1,388 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>浅析ES6中的class类 | A little koi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Koi">
+    
+    <meta name="description" content="浅析ES6中的class类JavaScript 语言中，生成实例对象的传统方法是通过构造函数的方式。而ES6 提供了更好的方案，引入了 Class（类）这个概念，作为对象的模板。通过class关键字，可以定义类。
+基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon-01.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/avatar.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/avatar.png">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/avatar.png" alt="A little koi" title="A little koi"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="A little koi">A little koi</a></h1>
+				<h2 class="blog-motto">嘿！是充满激情的你啊</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wenhai974.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/07/24/浅析ES6中的class类/" title="浅析ES6中的class类" itemprop="url">浅析ES6中的class类</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wenhai974.github.io" title="Koi">Koi</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-07-23T16:00:00.000Z" itemprop="datePublished">2019-07-24</time>
+    更新日期:<time datetime="2019-07-24T05:53:41.973Z" itemprop="dateModified">2019-07-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#浅析ES6中的class类"><span class="toc-number">1.</span> <span class="toc-text">浅析ES6中的class类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是构造函数"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">什么是构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#构造函数生成实例的执行过程"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">构造函数生成实例的执行过程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#class类的写法"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">class类的写法</span></a></li></ol></li></ol></li></ol></li></ol>
+		</div>
+		
+		<h1 id="浅析ES6中的class类"><a href="#浅析ES6中的class类" class="headerlink" title="浅析ES6中的class类"></a>浅析ES6中的class类</h1><p><strong>JavaScript 语言中，生成实例对象的传统方法是通过构造函数的方式。而ES6 提供了更好的方案，引入了 Class（类）这个概念，作为对象的模板。通过<code>class</code>关键字，可以定义类。</strong></p>
+<p><strong>基本上，ES6 的<code>class</code>可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的<code>class</code>写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。</strong></p>
+<h4 id="什么是构造函数"><a href="#什么是构造函数" class="headerlink" title="什么是构造函数"></a>什么是构造函数</h4><p>在JS中，构造函数和普通函数在定义上并无区别，是否被称为构造函数在于调用方式的不同，<strong>当使用 new 关键词调用函数时，即称为构造函数</strong>。</p>
+<p>在写法上，函数名通常约定以大写字母开头，代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name, email</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.name = name</span><br><span class="line">  <span class="keyword">this</span>.email = email</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.write = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'我的名字是'</span> + <span class="keyword">this</span>.name + <span class="string">'，邮箱地址是：'</span> + <span class="keyword">this</span>.email)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Koi = <span class="keyword">new</span> Person(<span class="string">'一尾小锦鲤'</span>, <span class="string">'koi@163.com'</span>)</span><br><span class="line">Koi.constructor === Person <span class="comment">// true</span></span><br><span class="line">Person === Person.prototype.constructor <span class="comment">// true</span></span><br><span class="line"><span class="comment">// 这种调用方式，Koi是Person的实例化对象，Person即为Koi的构造函数即构造器。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="构造函数生成实例的执行过程"><a href="#构造函数生成实例的执行过程" class="headerlink" title="构造函数生成实例的执行过程"></a>构造函数生成实例的执行过程</h5><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>当使用了构造函数，并且<span class="keyword">new</span> 构造函数(),后台会隐式执行<span class="keyword">new</span> <span class="built_in">Object</span>()创建对象;</span><br><span class="line"><span class="number">2.</span>将构造函数的作用域给新对象，（即<span class="keyword">new</span> <span class="built_in">Object</span>()创建出的对象），而函数体内的<span class="keyword">this</span>就代表<span class="keyword">new</span> <span class="built_in">Object</span>()出来的对象。</span><br><span class="line"><span class="number">3.</span>执行构造函数的代码。</span><br><span class="line"><span class="number">4.</span>返回新对象（后台直接返回）;</span><br></pre></td></tr></table></figure>
+
+<h4 id="class类的写法"><a href="#class类的写法" class="headerlink" title="class类的写法"></a>class类的写法</h4><p>同样的，以class的方式改写上面的代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> (name, email) &#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">    <span class="keyword">this</span>.email = email</span><br><span class="line">    <span class="keyword">this</span>.</span><br><span class="line">  &#125;</span><br><span class="line">  write () &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'我的名字是'</span> + <span class="keyword">this</span>.name + <span class="string">'，邮箱地址是：'</span> + <span class="keyword">this</span>.email)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Koi = <span class="keyword">new</span> Person(<span class="string">'一尾小锦鲤'</span>, <span class="string">'koi@163.com'</span>) <span class="comment">// 使用方法与构造函数的方式完全一致</span></span><br><span class="line"><span class="keyword">typeof</span> Person <span class="comment">// function</span></span><br><span class="line">Koi.constructor === Person <span class="comment">// true</span></span><br><span class="line">Person === Person.prototype.constructor <span class="comment">// true--函数的原型对象的构造函数即为函数自身</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码定义了一个“类”，里面有一个<code>constructor</code>的方法，此方法为即为class写法的构造方法，里面的this关键字即代表实例对象，<code>constructor</code>为默认方法，当未定义<code>constructor</code>方法时，系统会默认添加此方法，当然，此时便无法传入初始化参数。</p>
+<p>class类除了构造方法，还自定义了一个<code>write</code>方法。注意，定义“类”的方法的时候，前面不需要加上<code>function</code>这个关键字，直接把函数定义放进去了就可以了。另外，方法之间不需要逗号分隔，加了会报错。</p>
+<p>上面代码表明，类的数据类型就是函数，类本身就指向构造函数。</p>
+<p>使用的时候，也是直接对类使用<code>new</code>命令，<strong>跟构造函数的用法完全一致</strong>。</p>
+<p>在上面代码中，像<code>write</code>这样定义的方法，实际上与定义在构造函数的<code>prototype</code>上的方法一样。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  toValue() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于</span></span><br><span class="line"></span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">  <span class="keyword">constructor</span>: Person,</span><br><span class="line">  toString() &#123;&#125;,</span><br><span class="line">  toValue() &#123;&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在类的实例上面调用方法，其实就是调用原型上的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;&#125;</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> B();</span><br><span class="line"></span><br><span class="line">b.constructor === B.prototype.constructor <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>b</code>是<code>B</code>类的实例，它的<code>constructor</code>方法就是<code>B</code>类原型的<code>constructor</code>方法。</p>
+<p>由于类的方法都定义在<code>prototype</code>对象上面，所以类的新方法可以添加在<code>prototype</code>对象上面。<code>Object.assign</code>方法可以很方便地一次向类添加多个方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.assign(Person.prototype, &#123;</span><br><span class="line">  toString()&#123;&#125;,</span><br><span class="line">  toValue()&#123;&#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>另外，因为类的内部所定义的方法都是绑定在<code>prototype</code>上，所以早实例对象中都是不可枚举的，<strong>但是在<code>constructor</code>函数里面通过<code>this</code>关键词绑定的方法，是可枚举的。</strong>这里我们可以理解成在<code>constructor</code>中定义的方法以及属性，因为是直接绑定给<code>this</code>的，所以在实例化的过程中将直接赋值实例对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span> (size, color) &#123;</span><br><span class="line">    <span class="keyword">this</span>.size = size</span><br><span class="line">    <span class="keyword">this</span>.color = color</span><br><span class="line">    <span class="keyword">this</span>.write = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'我的尺寸是'</span> + <span class="keyword">this</span>.size + <span class="string">' 我的颜色是:'</span> + <span class="keyword">this</span>.color)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  toString () &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'调用原型上的方法toString'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> p = <span class="keyword">new</span> Point(<span class="string">'180'</span>, <span class="string">'red'</span>)</span><br><span class="line">p.hasOwnProperty(<span class="string">'size'</span>) <span class="comment">// true</span></span><br><span class="line">p.hasOwnProperty(<span class="string">'write'</span>) <span class="comment">// true</span></span><br><span class="line">p.hasOwnProperty(<span class="string">'toString'</span>) <span class="comment">// false</span></span><br><span class="line">p.write() <span class="comment">// 我的尺寸是180 我的颜色是:red</span></span><br><span class="line">p.toString() <span class="comment">// 调用原型上的方法toString</span></span><br></pre></td></tr></table></figure>
+
+<p>这一点在实例化对象中，属性是否可枚举与<code>构造函数</code>相同，但是在构造函数和class方法的<code>prototype</code>原型对象上，却不同。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>(x, y) &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Point.prototype.hasOwnProperty(<span class="string">'toString'</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>使用构造函数时：<code>toString</code>方法为可枚举属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Point = <span class="function"><span class="keyword">function</span> (<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Point.prototype.toString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line">Point.prototype.hasOwnProperty(<span class="string">'toString'</span>) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+  <div class="posts-footer-cont">
+    <img src="/img/wxZan.jpg" width="200" height="200" style="display:block;margin: 0 auto;">
+    <p style="text-align: center;margin-top: 10px;margin-bottom: 20px; color: #817c7c;">码字不易，本文若能帮到你，那我想要实现一个小小的愿望^_^</p>
+    <div class="author-right">
+  		<p>作者：Koi</p>
+  		<p>出处：<a href="https://wenhai974.github.io" target="_blank" title="Koi">https://wenhai974.github.io</a></p>
+  		<p>本文版权归作者所有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</p>
+    </div>
+  </div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/构造函数/">构造函数</a><a href="/tags/ES6/">ES6</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/JS/">JS</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wenhai974.github.io/2019/07/24/浅析ES6中的class类/" data-title="浅析ES6中的class类 | A little koi" data-tsina="5589786100" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2019/07/08/CSS常用样式类总结/"  title="CSS常用样式类总结">
+ <strong>NEXT:</strong><br/> 
+ <span>CSS常用样式类总结
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#浅析ES6中的class类"><span class="toc-number">1.</span> <span class="toc-text">浅析ES6中的class类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是构造函数"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">什么是构造函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#构造函数生成实例的执行过程"><span class="toc-number">1.0.0.1.1.</span> <span class="toc-text">构造函数生成实例的执行过程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#class类的写法"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">class类的写法</span></a></li></ol></li></ol></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/CSS/" title="CSS">CSS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/JS/" title="JS">JS<sup>2</sup></a></li>
+		
+			<li><a href="/categories/VUE/" title="VUE">VUE<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/CSS/" title="CSS">CSS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ES6/" title="ES6">ES6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/pdf-js/" title="pdf.js">pdf.js<sup>1</sup></a></li>
+		
+			<li><a href="/tags/vue-cli/" title="vue-cli">vue-cli<sup>1</sup></a></li>
+		
+			<li><a href="/tags/工具函数/" title="工具函数">工具函数<sup>1</sup></a></li>
+		
+			<li><a href="/tags/微信公众号/" title="微信公众号">微信公众号<sup>1</sup></a></li>
+		
+			<li><a href="/tags/构造函数/" title="构造函数">构造函数<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a>weChat：wenhai974</a></li>
+      <li><a href="mailto:wenhai974@163.com">Email：wenhai974@163.com</a></li>
+      <li><a href="http://code-fe.lovem.fun/" target="_blank">前端资源共享</a></li>
+      <li><a href="https://github.com/wenhai974" target="_blank" title="https://github.com/wenhai974">https://github.com/wenhai974</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+  
+  <div class="footer-slogan">勇士之魂，从未破灭！</div>
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/5589786100" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/wenhai974" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2019 
+		
+		<a href="https://wenhai974.github.io" target="_blank" title="Koi">Koi</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

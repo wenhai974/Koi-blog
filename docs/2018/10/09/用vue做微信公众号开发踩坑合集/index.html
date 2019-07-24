@@ -1,0 +1,393 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  
+    <title>用vue做微信公众号开发踩坑合集 | A little koi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="Koi">
+    
+    <meta name="description" content="准备工作作为个人开发者，可以申请微信订阅号，但是很多借口权限并不能获得，如网页授权登录等，所以需要申请一个测试账号，具体位置：微信公众平台==&amp;gt;开发者工具==&amp;gt;公众平台测试号获取到测试号之后，将appId 配置到自己项目中，并将appsecret和appId一并给后台同学，使用自己的微信">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon-01.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/avatar.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/avatar.png">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/avatar.png" alt="A little koi" title="A little koi"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="A little koi">A little koi</a></h1>
+				<h2 class="blog-motto">嘿！是充满激情的你啊</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/categories">分类</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wenhai974.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/10/09/用vue做微信公众号开发踩坑合集/" title="用vue做微信公众号开发踩坑合集" itemprop="url">用vue做微信公众号开发踩坑合集</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wenhai974.github.io" title="Koi">Koi</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2018-10-08T16:00:00.000Z" itemprop="datePublished">2018-10-09</time>
+    更新日期:<time datetime="2019-07-24T07:28:55.480Z" itemprop="dateModified">2019-07-24</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用户授权登录"><span class="toc-number">2.</span> <span class="toc-text">用户授权登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jssdk微信分享"><span class="toc-number">3.</span> <span class="toc-text">jssdk微信分享</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分享中遇到的坑"><span class="toc-number">3.0.1.</span> <span class="toc-text">分享中遇到的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#解决办法："><span class="toc-number">3.0.1.0.1.</span> <span class="toc-text">解决办法：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#PS："><span class="toc-number">3.0.1.0.2.</span> <span class="toc-text">PS：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-number">3.0.2.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+		</div>
+		
+		<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>作为个人开发者，可以申请微信订阅号，但是很多借口权限并不能获得，如网页授权登录等，所以需要申请一个测试账号，具体位置：微信公众平台==&gt;开发者工具==&gt;公众平台测试号<br><img src="https://img-blog.csdnimg.cn/20190125163249230.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzM2OTUyMQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>获取到测试号之后，将appId 配置到自己项目中，并将appsecret和appId一并给后台同学，使用自己的微信号关注该测试号，并配置JS接口安全域名（用作jssdk签名），和网页授权获取用户信息回调域名。</p>
+<h5 id="注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了"><a href="#注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了" class="headerlink" title="注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了"></a>注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了</h5><p><img src="https://img-blog.csdnimg.cn/20190125163528802.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzM2OTUyMQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br><img src="https://img-blog.csdnimg.cn/20190125164425457.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzM2OTUyMQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<h2 id="用户授权登录"><a href="#用户授权登录" class="headerlink" title="用户授权登录"></a>用户授权登录</h2><p>官方文档参考此处：<br><a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842" target="_blank" rel="noopener">https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842</a><br>这里分为如下几步，而前端同学需要做的只有第一步，引导用户同意授权，然后获取携带code的URL，并取得code，这个code即为当次用户授权的唯一凭证，并且只能使用一次<br><img src="https://img-blog.csdnimg.cn/20190125165012454.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzM2OTUyMQ==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"><br>获取到code之后，将它通过自己的业务逻辑传给后台同学，获取userToken即可。<br>引导用户授权代码在项目的index.html中即可：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">  &lt;head&gt;</span><br><span class="line">    &lt;meta charset=<span class="string">"utf-8"</span>&gt;</span><br><span class="line">    &lt;meta name=<span class="string">"viewport"</span> content=<span class="string">"width=device-width,initial-scale=1,user-scalable=0"</span>&gt;</span><br><span class="line">    &lt;title&gt;&lt;/title&gt;</span><br><span class="line">    &lt;script src=<span class="string">"https://res2.wx.qq.com/open/js/jweixin-1.4.0.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">      <span class="comment">// 网页授权之获取code</span></span><br><span class="line">      <span class="keyword">const</span> code = getUrlParam(<span class="string">"code"</span>);</span><br><span class="line">      <span class="keyword">if</span> (!code) &#123;</span><br><span class="line">        <span class="keyword">const</span> appid = <span class="string">"你自己的appId"</span>;</span><br><span class="line">        <span class="keyword">const</span> url = <span class="built_in">encodeURIComponent</span>(location.href.split(<span class="string">'#'</span>)[<span class="number">0</span>]);</span><br><span class="line">        <span class="built_in">window</span>.location.href = <span class="string">'https://open.weixin.qq.com/connect/oauth2/authorize?appid='</span> + appid + <span class="string">'&amp;redirect_uri='</span> + url + <span class="string">'&amp;response_type=code&amp;scope=snsapi_userinfo&amp;state=STATE#wechat_redirect'</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//获取url中参数</span></span><br><span class="line">      <span class="function"><span class="keyword">function</span> <span class="title">getUrlParam</span>(<span class="params">name</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> reg = <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">"(^|&amp;)"</span> + name + <span class="string">"=([^&amp;]*)(&amp;|$)"</span>);</span><br><span class="line">        <span class="keyword">var</span> r = <span class="built_in">window</span>.location.search.substr(<span class="number">1</span>).match(reg);</span><br><span class="line">        <span class="keyword">if</span> (r != <span class="literal">null</span>) <span class="keyword">return</span> <span class="built_in">decodeURI</span>(r[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">  &lt;/</span>head&gt;</span><br><span class="line">  &lt;body style=<span class="string">"font-size: 14px;"</span>&gt;</span><br><span class="line">    &lt;div id=<span class="string">"app"</span>&gt;&lt;/div&gt;</span><br><span class="line">    &lt;!-- built files will be auto injected --&gt;</span><br><span class="line">  &lt;<span class="regexp">/body&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>html&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>main.js</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 微信登录成功后再挂载Vue</span></span><br><span class="line">Login().then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    router,</span><br><span class="line">    store,</span><br><span class="line">    render: <span class="function"><span class="params">h</span> =&gt;</span> h(App),</span><br><span class="line">    created () &#123;&#125;</span><br><span class="line">  &#125;).$mount(<span class="string">'#app'</span>)</span><br><span class="line">&#125;).catch(<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'登录失败'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>Login.js</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span></span><br><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> &#123; ToastPlugin, LoadingPlugin &#125; <span class="keyword">from</span> <span class="string">'vux'</span></span><br><span class="line"><span class="keyword">import</span> tools <span class="keyword">from</span> <span class="string">'./assets/js/tools'</span></span><br><span class="line">Vue.use(ToastPlugin)</span><br><span class="line">Vue.use(LoadingPlugin)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建axios实例</span></span><br><span class="line"><span class="keyword">const</span> loginService = axios.create(&#123;</span><br><span class="line">  baseURL: process.env.BASE_API, <span class="comment">// api的base_url</span></span><br><span class="line">  timeout: <span class="number">8000</span> <span class="comment">// 请求超时时间</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> wxCode = tools.getUrlParam(<span class="string">'code'</span>)</span><br><span class="line">    <span class="keyword">var</span> bonusCode = tools.getUrlParam(<span class="string">'bonusCode'</span>)</span><br><span class="line">    <span class="keyword">if</span> (bonusCode) &#123;</span><br><span class="line">      <span class="comment">// 携带红包id</span></span><br><span class="line">      <span class="built_in">window</span>.localStorage.setItem(<span class="string">'bonusCode'</span>, bonusCode)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">window</span>.localStorage.removeItem(<span class="string">'bonusCode'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (wxCode) &#123;</span><br><span class="line">      Vue.$vux.loading.show()</span><br><span class="line">      loginService(&#123;</span><br><span class="line">        url: <span class="string">'/user/v1/login'</span>,</span><br><span class="line">        method: <span class="string">'post'</span>,</span><br><span class="line">        data: &#123;</span><br><span class="line">          wxCode</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        Vue.$vux.loading.hide()</span><br><span class="line">        <span class="keyword">if</span> (res.data.errCode === <span class="string">'0'</span>) &#123; <span class="comment">// 成功</span></span><br><span class="line">          <span class="built_in">window</span>.localStorage.setItem(<span class="string">'userToken'</span>, res.data.data.userToken)</span><br><span class="line">          <span class="built_in">window</span>.localStorage.setItem(<span class="string">'userInfo'</span>, <span class="built_in">JSON</span>.stringify(res.data.data.userInfo))</span><br><span class="line">          resolve(res)</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (res.data.errCode === <span class="string">'600001'</span>) &#123; <span class="comment">// 600001: 获取accessToken失败-code过期</span></span><br><span class="line">          <span class="built_in">window</span>.location.href = tools.DelUrlParam(<span class="string">'code'</span>) <span class="comment">// 删除URL中的code参数，并刷新-重新登录</span></span><br><span class="line">          reject(res)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          reject(res)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;).catch(<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">        reject(e)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码逻辑是每次用户进入都将重新登录，可根据自己项目需求在入口中判断userToken的存在与否即可避免每次登录，当然main.js中的登录逻辑也得响应修改。</p>
+<h2 id="jssdk微信分享"><a href="#jssdk微信分享" class="headerlink" title="jssdk微信分享"></a>jssdk微信分享</h2><p>官方文档：<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421141115" target="_blank" rel="noopener">https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421141115</a><br>微信分享需要注意的是，因为是spa单页面应用，所以在调用接口之前都应该根据当前前端url重新config一次sdk。</p>
+<blockquote>
+<p>所有需要使用JS-SDK的页面必须先注入配置信息，否则将无法调用（同一个url仅需调用一次，对于变化url的SPA的web app可在每次url变化时进行调用,目前Android微信客户端不支持pushState的H5新特性，所以使用pushState来实现web app的页面会导致签名失败，此问题会在Android6.2中修复）。</p>
+</blockquote>
+<p>需要注意的是，为了避免某些奇怪的问题，建议所有能使用https的地方，都统一使用https<br>以下为分享相关的封装：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// wx-js-sdk授权</span></span><br><span class="line"><span class="comment">/* eslint-disable */</span></span><br><span class="line"><span class="keyword">import</span> userService <span class="keyword">from</span> <span class="string">'../../service/userApi'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//获取jssdk需要的签名等参数</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    initConfig: <span class="function">(<span class="params">reqUrl, callback</span>) =&gt;</span> &#123;</span><br><span class="line">        userService.getWxSgin(reqUrl).then(<span class="function">(<span class="params">resp</span>) =&gt;</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (resp.data.errCode === <span class="string">'0'</span>) &#123;</span><br><span class="line">            <span class="keyword">const</span> &#123; signature, nonceStr, timestamp &#125; = resp.data.data;</span><br><span class="line">            <span class="keyword">const</span> appId = <span class="string">'你自己的appId'</span></span><br><span class="line">            wx.config(&#123;</span><br><span class="line">              signature, nonceStr, timestamp, appId, <span class="attr">debug</span>: <span class="literal">false</span>, <span class="attr">jsApiList</span>: [ <span class="string">"updateTimelineShareData"</span>, <span class="string">"updateAppMessageShareData"</span>, <span class="string">"onMenuShareTimeline"</span>, <span class="string">"onMenuShareAppMessage"</span>]</span><br><span class="line">            &#125;)</span><br><span class="line">            wx.ready(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">              <span class="built_in">console</span>.log(<span class="string">'微信JSSDK初始化成功'</span>)</span><br><span class="line">              <span class="keyword">if</span> (callback) &#123;</span><br><span class="line">                callback()</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            wx.error(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">              <span class="built_in">console</span>.log(e)</span><br><span class="line">              <span class="built_in">console</span>.log(<span class="string">'微信JSSDK初始化失败'</span>)</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;,</span><br><span class="line">    setShare: <span class="function">(<span class="params">params, callback</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> origin = location.origin;</span><br><span class="line">      <span class="comment">//“分享给朋友”</span></span><br><span class="line">      wx.onMenuShareAppMessage(&#123;</span><br><span class="line">        title: params.title,</span><br><span class="line">        desc: params.desc,</span><br><span class="line">        imgUrl: params.imgUrl,</span><br><span class="line">        link: params.link || origin,</span><br><span class="line">        success: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">          <span class="comment">//这里是回调函数 </span></span><br><span class="line">          <span class="keyword">if</span> (callback) &#123;</span><br><span class="line">            callback()</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        cancel: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'取消分享'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">      <span class="comment">//“分享到朋友圈”</span></span><br><span class="line">      wx.onMenuShareTimeline(&#123;</span><br><span class="line">        title: params.title,</span><br><span class="line">        desc: params.desc,</span><br><span class="line">        imgUrl: params.imgUrl,</span><br><span class="line">        link: params.link || origin,</span><br><span class="line">        success: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">          <span class="comment">//这里是回调函数 </span></span><br><span class="line">          <span class="keyword">if</span> (callback) &#123;</span><br><span class="line">            callback()</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        cancel: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        	<span class="built_in">console</span>.log(<span class="string">'取消分享'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 代码中的userService.getWxSgin，即为通过后台获取config相关参数，并初始化。使用时，只需要在initConfig的回调中再调用setShare即可。</p>
+<h4 id="分享中遇到的坑"><a href="#分享中遇到的坑" class="headerlink" title="分享中遇到的坑"></a>分享中遇到的坑</h4><p>这里只说我做的时候遇到的坑，不排除还没有遇到的。<br>IOS分享的时候，在微信开发工具上一切正常，但到真机上之后，IOS自定义分享并不生效，排除掉分享图片大小，url合法性等问题之后。一个主要原因是：<br><strong>IOS微信浏览器记录的是第一次打开页面时的URL，也就是说，前端路由跳转时，IOS的url地址栏并不会根据前端路由改变，所以，当调用wx.config()时，你所注册的当前页面url还是第一次进入页面的url，所以获取到的时间戳，签名等参数，并不是当前前端路由所需要的，也就导致分享失败</strong></p>
+<h6 id="解决办法："><a href="#解决办法：" class="headerlink" title="解决办法："></a>解决办法：</h6><p>在需要分享的页面中加入如下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">beforeRouteEnter (to, <span class="keyword">from</span>, next) &#123;</span><br><span class="line">   next(<span class="function"><span class="params">vm</span> =&gt;</span> &#123;</span><br><span class="line">     <span class="keyword">var</span> isiOS = !!navigator.userAgent.match(<span class="regexp">/\(i[^;]+;( U;)? CPU.+Mac OS X/</span>)</span><br><span class="line">     <span class="keyword">if</span> (!<span class="built_in">window</span>.localStorage.getItem(<span class="string">'resultReload'</span>) &amp;&amp; isiOS) &#123;</span><br><span class="line">       <span class="built_in">window</span>.localStorage.setItem(<span class="string">'resultReload'</span>, <span class="built_in">window</span>.location.href)</span><br><span class="line">       <span class="comment">// 微信分享需要重新设置URL</span></span><br><span class="line">       <span class="built_in">window</span>.location.href = <span class="built_in">window</span>.location.href</span><br><span class="line">     &#125;</span><br><span class="line">     instance.setShareInfo()</span><br><span class="line">   &#125;)</span><br><span class="line"> &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>在main.js中加入如下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach(<span class="function">(<span class="params">to, <span class="keyword">from</span>, next</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (to.meta.title) &#123;</span><br><span class="line">    <span class="built_in">document</span>.title = to.meta.title</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (to.name !== <span class="string">'bonusResult'</span>) &#123;</span><br><span class="line">    <span class="built_in">window</span>.localStorage.removeItem(<span class="string">'resultReload'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  next()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong><br>在进入需要设置分享的页面时，判断是否为IOS，如果是，将url强制更改为前端路由对应的url，当然，还需要在路由变化时，删除掉用于做分享页面强制刷新的标识。然后再刷新之后再重新调用wx.config（）以及设置分享信息等。</p>
+<h6 id="PS："><a href="#PS：" class="headerlink" title="PS："></a>PS：</h6><p>在做分享的时候，请求微信的一切东西，能用https的地方，绝不用http，如下两个：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="string">"https://res2.wx.qq.com/open/js/jweixin-1.4.0.js"</span>&gt;&lt;/script&gt;</span><br><span class="line"><span class="built_in">window</span>.location.href = <span class="string">'https://open.weixin.qq.com/connect/oauth2/authorize?appid='</span> + appid + <span class="string">'&amp;redirect_uri='</span> + url + ......</span><br></pre></td></tr></table></figure>
+
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>因为此项目工期较短，很多东西还未深究，以前东西仅为个人记录和参考，需要优化的地方还很多，比如登录逻辑，欢迎交流。</p>
+  
+	</div>
+  <div class="posts-footer-cont">
+    <img src="/img/wxZan.jpg" width="200" height="200" style="display:block;margin: 0 auto;">
+    <p style="text-align: center;margin-top: 10px;margin-bottom: 20px; color: #817c7c;">码字不易，本文若能帮到你，那我想要实现一个小小的愿望^_^</p>
+    <div class="author-right">
+  		<p>作者：Koi</p>
+  		<p>出处：<a href="https://wenhai974.github.io" target="_blank" title="Koi">https://wenhai974.github.io</a></p>
+  		<p>本文版权归作者所有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。</p>
+    </div>
+  </div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/微信公众号/">微信公众号</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/VUE/">VUE</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wenhai974.github.io/2018/10/09/用vue做微信公众号开发踩坑合集/" data-title="用vue做微信公众号开发踩坑合集 | A little koi" data-tsina="5589786100" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2019/07/08/JS常用工具类函数总结/" title="JS常用工具类函数总结">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  JS常用工具类函数总结</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2018/10/09/在vue项目中使用pdf.js渲染base64编码的pdf（假装屏蔽打印和下载）/"  title="在vue项目中使用pdf.js渲染base64编码的pdf（假装屏蔽打印和下载）">
+ <strong>NEXT:</strong><br/> 
+ <span>在vue项目中使用pdf.js渲染base64编码的pdf（假装屏蔽打印和下载）
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#准备工作"><span class="toc-number">1.</span> <span class="toc-text">准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">注意此处的域名须与你自己本地前端项目所跑的域名统一，且不能是locahost，具体方法此处就不细讲了</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用户授权登录"><span class="toc-number">2.</span> <span class="toc-text">用户授权登录</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jssdk微信分享"><span class="toc-number">3.</span> <span class="toc-text">jssdk微信分享</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分享中遇到的坑"><span class="toc-number">3.0.1.</span> <span class="toc-text">分享中遇到的坑</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#解决办法："><span class="toc-number">3.0.1.0.1.</span> <span class="toc-text">解决办法：</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#PS："><span class="toc-number">3.0.1.0.2.</span> <span class="toc-text">PS：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#总结"><span class="toc-number">3.0.2.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+  <div class="archiveslist">
+    <p class="asidetitle"><a href="/archives">归档</a></p>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li></ul>
+  </div>
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/CSS/" title="CSS">CSS<sup>1</sup></a></li>
+		
+			<li><a href="/categories/JS/" title="JS">JS<sup>2</sup></a></li>
+		
+			<li><a href="/categories/VUE/" title="VUE">VUE<sup>3</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/CSS/" title="CSS">CSS<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ES6/" title="ES6">ES6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/pdf-js/" title="pdf.js">pdf.js<sup>1</sup></a></li>
+		
+			<li><a href="/tags/vue-cli/" title="vue-cli">vue-cli<sup>1</sup></a></li>
+		
+			<li><a href="/tags/工具函数/" title="工具函数">工具函数<sup>1</sup></a></li>
+		
+			<li><a href="/tags/微信公众号/" title="微信公众号">微信公众号<sup>1</sup></a></li>
+		
+			<li><a href="/tags/构造函数/" title="构造函数">构造函数<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a>weChat：wenhai974</a></li>
+      <li><a href="mailto:wenhai974@163.com">Email：wenhai974@163.com</a></li>
+      <li><a href="http://code-fe.lovem.fun/" target="_blank">前端资源共享</a></li>
+      <li><a href="https://github.com/wenhai974" target="_blank" title="https://github.com/wenhai974">https://github.com/wenhai974</a></li>
+    </ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+  
+  <div class="footer-slogan">勇士之魂，从未破灭！</div>
+	<div class="social-font clearfix">
+		
+		<a href="http://weibo.com/http://weibo.com/5589786100" target="_blank" title="weibo"></a>
+		
+		
+		
+		<a href="https://github.com/https://github.com/wenhai974" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2019 
+		
+		<a href="https://wenhai974.github.io" target="_blank" title="Koi">Koi</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
